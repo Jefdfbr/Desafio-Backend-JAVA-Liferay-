@@ -1,0 +1,5 @@
+.git
+*.tar.gz
+*.zip
+*.md
+.gitignore

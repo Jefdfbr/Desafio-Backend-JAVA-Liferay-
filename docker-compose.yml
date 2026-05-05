@@ -1,0 +1,22 @@
+services:
+  liferay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: desafio2-liferay
+    restart: unless-stopped
+    environment:
+      JAVA_HOME: /opt/java/openjdk
+      JAVA_OPTS: -Xms2048m -Xmx4096m -Dfile.encoding=UTF8 -Duser.timezone=America/Sao_Paulo
+      LIFERAY_HOME: /opt/liferay
+    networks:
+      - rss_rss-network
+      - alje_default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  rss_rss-network:
+    external: true
+  alje_default:
+    external: true
