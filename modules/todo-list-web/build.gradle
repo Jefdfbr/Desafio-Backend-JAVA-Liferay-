@@ -1,0 +1,11 @@
+apply plugin: "biz.aQute.bnd.builder"
+
+dependencies {
+	compileOnly files("libs/osgi-annotation-1.4.jar")
+	compileOnly fileTree(dir: "/var/www/desafio2/liferay/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib", include: "*.jar")
+	compileOnly fileTree(dir: "/var/www/desafio2/liferay/tomcat/lib", include: "*.jar")
+}
+
+jar {
+	archiveFileName = "com.seatecnologia.todo.web.jar"
+}
