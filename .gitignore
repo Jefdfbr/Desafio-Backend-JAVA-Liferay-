@@ -1,0 +1,31 @@
+# Build outputs
+build/
+.gradle/
+out/
+
+# Gradle wrapper cache (keep gradlew scripts)
+gradle/wrapper/gradle-wrapper.jar
+
+# Liferay installation (heavy, not source)
+liferay/
+*.tar.gz
+*.zip
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Stray build artifacts at root
+META-INF/
+
+# Logs
+*.log
+
+# Secrets
+portal-ext.properties
