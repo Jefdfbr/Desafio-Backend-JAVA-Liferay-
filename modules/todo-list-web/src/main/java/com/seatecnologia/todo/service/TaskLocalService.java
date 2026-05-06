@@ -1,23 +1,23 @@
 package com.seatecnologia.todo.service;
 
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.seatecnologia.todo.model.SubTask;
 import com.seatecnologia.todo.model.Task;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.sql.DataSource;
 
 public class TaskLocalService {
-	private static final Log _log = LogFactoryUtil.getLog(TaskLocalService.class);
-	private static final String URL = "jdbc:postgresql://alje-postgres-1:5432/desafio2";
-	private static final String USER = "alje";
-	private static final String PASS = "alje";
 
-	static { try { Class.forName("org.postgresql.Driver"); } catch(Exception e) { _log.error(e); } }
+	// Injeção de DataSource para testes (null = usa pool do Liferay)
+	static DataSource _dataSource = null;
 
-	private static Connection c() throws Exception { return DriverManager.getConnection(URL, USER, PASS); }
+	private static Connection c() throws Exception {
+		if (_dataSource != null) return _dataSource.getConnection();
+		return DataAccess.getConnection();
+	}
 
 	private static long nid(Connection cn, String t, String col) throws Exception {
 		Statement s = null; ResultSet r = null;

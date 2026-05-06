@@ -1,11 +1,23 @@
 apply plugin: "biz.aQute.bnd.builder"
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-	compileOnly files("libs/osgi-annotation-1.4.jar")
-	compileOnly fileTree(dir: "/var/www/desafio2/liferay/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib", include: "*.jar")
-	compileOnly fileTree(dir: "/var/www/desafio2/liferay/tomcat/lib", include: "*.jar")
+    compileOnly files("libs/osgi-annotation-1.4.jar")
+    compileOnly fileTree(dir: "/var/www/desafio2/liferay/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib", include: "*.jar")
+    compileOnly fileTree(dir: "/var/www/desafio2/liferay/tomcat/lib", include: "*.jar")
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
+    testImplementation "com.h2database:h2:2.2.224"
 }
 
 jar {
-	archiveFileName = "com.seatecnologia.todo.web.jar"
+    archiveFileName = "com.seatecnologia.todo.web.jar"
+}
+
+test {
+    useJUnitPlatform()
 }
