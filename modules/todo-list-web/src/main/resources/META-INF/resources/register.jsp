@@ -10,11 +10,19 @@
         <portlet:renderURL var="backURL" />
         <a href="<%= backURL %>" class="btn-todo btn-primary">Ir para minhas tarefas</a>
     </div>
+    <% } else if ("true".equals(ParamUtil.getString(request, "registrationSuccess"))) { %>
+
+    <div class="todo-card todo-center">
+        <div class="todo-logo todo-logo-success">&#10003;</div>
+        <h3>Conta criada com sucesso!</h3>
+        <p class="todo-subtitle">Seu cadastro foi realizado. Faça login para começar.</p>
+        <a href="<%= themeDisplay.getURLSignIn() %>" class="btn-todo btn-primary btn-full">Ir para o login</a>
+    </div>
+
     <% } else { %>
 
-    <liferay-ui:success key="user-registered"            message="user-registered" />
-    <liferay-ui:error   key="registration-failed"         message="registration-failed" />
-    <liferay-ui:error   key="registration-fields-required" message="registration-fields-required" />
+    <liferay-ui:error key="registration-failed"          message="registration-failed" />
+    <liferay-ui:error key="registration-fields-required" message="registration-fields-required" />
 
     <div class="todo-card">
         <div class="todo-logo">&#10003;</div>

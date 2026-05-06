@@ -235,7 +235,7 @@ public class TodoListPortlet extends MVCPortlet {
 				0L, 0L, true, 1, 1, 1970, null, 0,
 				new long[0], new long[0], new long[0], new long[0], false, sc
 			);
-			SessionMessages.add(r, "user-registered");
+			rp.setRenderParameter("registrationSuccess", "true");
 		} catch (Exception e) {
 			_log.error("Registration failed for email=" + email, e);
 			SessionErrors.add(r, "registration-failed");
