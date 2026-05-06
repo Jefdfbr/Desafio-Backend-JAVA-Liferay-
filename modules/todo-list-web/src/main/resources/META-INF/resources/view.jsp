@@ -12,12 +12,9 @@ SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         <div class="todo-logo">&#10003;</div>
         <h2>Todo List</h2>
         <p>Gerencie suas tarefas de forma simples e eficiente.</p>
-        <portlet:renderURL var="registerURL">
-            <portlet:param name="mvcPath" value="/register.jsp" />
-        </portlet:renderURL>
         <div class="todo-login-actions">
             <a href="<%= themeDisplay.getURLSignIn() %>" class="btn-todo btn-primary">Entrar</a>
-            <a href="<%= registerURL %>" class="btn-todo btn-secondary">Criar conta</a>
+            <a href="<%= com.liferay.portal.kernel.util.PortalUtil.getCreateAccountURL(request, themeDisplay) %>" class="btn-todo btn-secondary">Criar conta</a>
         </div>
     </div>
 </div>
