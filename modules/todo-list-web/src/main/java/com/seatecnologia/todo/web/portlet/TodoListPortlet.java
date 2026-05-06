@@ -241,7 +241,8 @@ public class TodoListPortlet extends MVCPortlet {
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updatePassword(
 				newUser.getUserId(), password, password, false
 			);
-			// Allow immediate login (no terms-of-use interstitial)
+			// Allow immediate login: skip email OTP and terms-of-use interstitial
+			newUser.setEmailAddressVerified(true);
 			newUser.setAgreedToTermsOfUse(true);
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateUser(newUser);
 			rp.setRenderParameter("registrationSuccess", "true");
