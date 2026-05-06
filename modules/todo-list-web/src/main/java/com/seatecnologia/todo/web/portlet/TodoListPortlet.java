@@ -167,24 +167,26 @@ public class TodoListPortlet extends MVCPortlet {
 		String mimeType = upload.getContentType("imageFile");
 
 		if (file == null || !file.exists() || file.length() == 0 || fileName == null || fileName.isEmpty()) {
-			SessionErrors.add(r, "image-invalid");
+			rp.setRenderParameter("uploadError", "image-invalid");
 			rp.setRenderParameter("mvcPath", "/edit_task.jsp");
 			rp.setRenderParameter("taskId", String.valueOf(taskId));
 			return;
 		}
 		if (file.length() > MAX_IMAGE_SIZE) {
-			SessionErrors.add(r, "image-too-large");
+			rp.setRenderParameter("uploadError", "image-too-large");
 			rp.setRenderParameter("mvcPath", "/edit_task.jsp");
 			rp.setRenderParameter("taskId", String.valueOf(taskId));
 			return;
 		}
 		if (!isValidImageMagic(file)) {
-			SessionErrors.add(r, "image-invalid");
+			rp.setRenderParameter("uploadError", "image-invalid");
 			rp.setRenderParameter("mvcPath", "/edit_task.jsp");
 			rp.setRenderParameter("taskId", String.valueOf(taskId));
 			return;
 		}
 
+		// Nome único para evitar DuplicateFileEntryException no Document Library
+		String uniqueName = "task_" + taskId + "_" + System.currentTimeMillis() + "_" + fileName;
 		try {
 			ServiceContext sc = ServiceContextFactory.getInstance(r);
 			sc.setScopeGroupId(td.getScopeGroupId());
@@ -192,9 +194,9 @@ public class TodoListPortlet extends MVCPortlet {
 				td.getUserId(),
 				td.getScopeGroupId(),
 				DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-				fileName,
+				uniqueName,
 				mimeType,
-				fileName,
+				uniqueName,
 				"",
 				"",
 				file,
@@ -204,7 +206,7 @@ public class TodoListPortlet extends MVCPortlet {
 			SessionMessages.add(r, "image-uploaded");
 		} catch (Exception e) {
 			_log.error("Image upload failed for taskId=" + taskId, e);
-			SessionErrors.add(r, "image-upload-error");
+			rp.setRenderParameter("uploadError", "image-upload-error");
 		}
 
 		rp.setRenderParameter("mvcPath", "/edit_task.jsp");

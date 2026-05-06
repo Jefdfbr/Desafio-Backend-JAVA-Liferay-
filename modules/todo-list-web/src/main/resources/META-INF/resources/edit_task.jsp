@@ -35,17 +35,23 @@ if (task.getImageFileEntryId() > 0) {
 
     <a href="/web/guest/home" class="btn-todo btn-secondary todo-back">&#8592; Voltar para lista</a>
 
-    <liferay-ui:success key="task-updated"    message="task-updated" />
-    <liferay-ui:success key="subtask-updated" message="subtask-updated" />
-    <liferay-ui:success key="subtask-added"   message="subtask-added" />
-    <liferay-ui:success key="subtask-deleted" message="subtask-deleted" />
-    <liferay-ui:success key="image-uploaded"  message="image-uploaded" />
-    <liferay-ui:error   key="title-required"          message="title-required" />
-    <liferay-ui:error   key="subtask-title-required"  message="subtask-title-required" />
-    <liferay-ui:error   key="not-authorized"          message="not-authorized" />
-    <liferay-ui:error   key="image-invalid"           message="image-invalid" />
-    <liferay-ui:error   key="image-too-large"         message="image-too-large" />
-    <liferay-ui:error   key="image-upload-error"      message="image-upload-error" />
+    <liferay-ui:success key="task-updated"    message="Tarefa atualizada com sucesso." />
+    <liferay-ui:success key="subtask-updated" message="Subtarefa atualizada." />
+    <liferay-ui:success key="subtask-added"   message="Subtarefa adicionada." />
+    <liferay-ui:success key="subtask-deleted" message="Subtarefa removida." />
+    <liferay-ui:success key="image-uploaded"  message="Imagem enviada com sucesso." />
+    <liferay-ui:error   key="title-required"         message="O título é obrigatório." />
+    <liferay-ui:error   key="subtask-title-required" message="O título da subtarefa é obrigatório." />
+    <liferay-ui:error   key="not-authorized"         message="Acesso negado." />
+    <%
+    String uploadError = ParamUtil.getString(renderRequest, "uploadError");
+    if ("image-invalid".equals(uploadError)) { %>
+    <div class="todo-alert todo-alert-error">Arquivo inválido. Envie uma imagem JPEG, PNG ou GIF.</div>
+    <% } else if ("image-too-large".equals(uploadError)) { %>
+    <div class="todo-alert todo-alert-error">Imagem muito grande. O tamanho máximo é 5 MB.</div>
+    <% } else if ("image-upload-error".equals(uploadError)) { %>
+    <div class="todo-alert todo-alert-error">Falha ao enviar a imagem. Tente novamente.</div>
+    <% } %>
 
     <%-- Editar tarefa --%>
     <div class="todo-card">
