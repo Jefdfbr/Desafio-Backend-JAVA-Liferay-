@@ -22,13 +22,17 @@
 
     <% } else { %>
 
-    <liferay-ui:success key="registrationSuccess" message="Conta criada com sucesso! Seu cadastro foi realizado. Faça login para começar." />
-    <liferay-ui:error key="registration-failed" message="Falha no cadastro. Tente novamente ou entre em contato com o suporte." />
-    <liferay-ui:error key="registration-fields-required" message="Todos os campos são obrigatórios." />
-    <liferay-ui:error key="email-already-used" message="Este e-mail já está cadastrado. Faça login para continuar." />
-    <liferay-ui:error key="password-too-weak" message="A senha não atende aos requisitos mínimos de segurança (mínimo 6 caracteres)." />
-    <liferay-ui:error key="passwords-do-not-match" message="As senhas não coincidem." />
-    <liferay-ui:error key="already-signed-in" message="Você já está logado!" />
+    <% if ("registration-failed".equals(regError)) { %>
+    <div class="todo-alert todo-alert-error">Falha no cadastro. Tente novamente ou entre em contato com o suporte.</div>
+    <% } else if ("registration-fields-required".equals(regError)) { %>
+    <div class="todo-alert todo-alert-error">Todos os campos são obrigatórios.</div>
+    <% } else if ("email-already-used".equals(regError)) { %>
+    <div class="todo-alert todo-alert-error">Este e-mail já está cadastrado. Faça login para continuar.</div>
+    <% } else if ("password-too-weak".equals(regError)) { %>
+    <div class="todo-alert todo-alert-error">A senha não atende aos requisitos mínimos de segurança (mínimo 6 caracteres).</div>
+    <% } else if ("passwords-do-not-match".equals(regError)) { %>
+    <div class="todo-alert todo-alert-error">As senhas não coincidem.</div>
+    <% } %>
 
     <div class="todo-card">
         <div class="todo-logo">&#10003;</div>
