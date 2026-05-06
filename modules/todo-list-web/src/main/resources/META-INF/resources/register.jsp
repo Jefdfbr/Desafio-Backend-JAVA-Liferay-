@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="com.liferay.portal.kernel.servlet.SessionErrors" %>
 <%@ include file="/init.jsp" %>
+<% String regError = ParamUtil.getString(renderRequest, "regError"); %>
 
 <div class="todo-container">
 
@@ -22,21 +22,13 @@
 
     <% } else { %>
 
-    <% if (SessionErrors.contains(renderRequest, "registration-failed")) { %>
-    <div class="todo-alert todo-alert-error">Falha no cadastro. Tente novamente ou entre em contato com o suporte.</div>
-    <% } %>
-    <% if (SessionErrors.contains(renderRequest, "registration-fields-required")) { %>
-    <div class="todo-alert todo-alert-error">Todos os campos são obrigatórios.</div>
-    <% } %>
-    <% if (SessionErrors.contains(renderRequest, "email-already-used")) { %>
-    <div class="todo-alert todo-alert-error">Este e-mail já está cadastrado. Faça login para continuar.</div>
-    <% } %>
-    <% if (SessionErrors.contains(renderRequest, "password-too-weak")) { %>
-    <div class="todo-alert todo-alert-error">A senha não atende aos requisitos mínimos de segurança (mínimo 6 caracteres).</div>
-    <% } %>
-    <% if (SessionErrors.contains(renderRequest, "passwords-do-not-match")) { %>
-    <div class="todo-alert todo-alert-error">As senhas não coincidem.</div>
-    <% } %>
+    <liferay-ui:success key="registrationSuccess" message="Conta criada com sucesso! Seu cadastro foi realizado. Faça login para começar." />
+    <liferay-ui:error key="registration-failed" message="Falha no cadastro. Tente novamente ou entre em contato com o suporte." />
+    <liferay-ui:error key="registration-fields-required" message="Todos os campos são obrigatórios." />
+    <liferay-ui:error key="email-already-used" message="Este e-mail já está cadastrado. Faça login para continuar." />
+    <liferay-ui:error key="password-too-weak" message="A senha não atende aos requisitos mínimos de segurança (mínimo 6 caracteres)." />
+    <liferay-ui:error key="passwords-do-not-match" message="As senhas não coincidem." />
+    <liferay-ui:error key="already-signed-in" message="Você já está logado!" />
 
     <div class="todo-card">
         <div class="todo-logo">&#10003;</div>

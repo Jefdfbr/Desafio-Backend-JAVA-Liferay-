@@ -254,7 +254,7 @@ public class TodoListPortlet extends MVCPortlet {
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateEmailAddressVerified(userId, true);
 			_log.info(auditJson("registerUser", 0, "system",
 				"newUserId=" + userId + ", email=" + sanitize(email, 255)));
-			rp.setRenderParameter("registrationSuccess", "true");
+			SessionMessages.add(r, "registrationSuccess");
 		} catch (com.liferay.portal.kernel.exception.UserEmailAddressException e) {
 			_log.warn(auditJson("registerUser", 0, "system",
 				"failed, email=" + sanitize(email, 255) + ", reason=email_already_used"));
