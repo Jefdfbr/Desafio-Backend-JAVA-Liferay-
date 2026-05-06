@@ -228,13 +228,17 @@ public class TodoListPortlet extends MVCPortlet {
 		}
 		try {
 			ServiceContext sc = com.liferay.portal.kernel.service.ServiceContextFactory.getInstance(r);
-			com.liferay.portal.kernel.service.UserLocalServiceUtil.addUser(
-				0L, td.getCompanyId(), false, password, password,
-				true, null, email, td.getLocale(),
-				firstName, null, lastName,
-				0L, 0L, true, 1, 1, 1970, null, 0,
-				new long[0], new long[0], new long[0], new long[0], false, sc
-			);
+			com.liferay.portal.kernel.model.User newUser =
+				com.liferay.portal.kernel.service.UserLocalServiceUtil.addUser(
+					0L, td.getCompanyId(), false, password, password,
+					true, null, email, td.getLocale(),
+					firstName, null, lastName,
+					0L, 0L, true, 1, 1, 1970, null, 0,
+					new long[0], new long[0], new long[0], new long[0], false, sc
+				);
+			// Ensure user can log in immediately without terms-of-use interstitial
+			newUser.setAgreedToTermsOfUse(true);
+			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateUser(newUser);
 			rp.setRenderParameter("registrationSuccess", "true");
 		} catch (com.liferay.portal.kernel.exception.UserEmailAddressException e) {
 			SessionErrors.add(r, "email-already-used");
