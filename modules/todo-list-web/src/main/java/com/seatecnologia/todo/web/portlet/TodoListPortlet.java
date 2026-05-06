@@ -211,66 +211,6 @@ public class TodoListPortlet extends MVCPortlet {
 		rp.setRenderParameter("taskId", String.valueOf(taskId));
 	}
 
-	// -- User registration ------------------------------------------------------
-
-	public void registerUser(ActionRequest r, ActionResponse rp) throws Exception {
-		ThemeDisplay td = (ThemeDisplay) r.getAttribute(WebKeys.THEME_DISPLAY);
-		if (td.isSignedIn()) { SessionErrors.add(r, "already-signed-in"); return; }
-		String email = ParamUtil.getString(r, "emailAddress").trim();
-		String firstName = sanitize(ParamUtil.getString(r, "firstName"), 75);
-		String lastName = sanitize(ParamUtil.getString(r, "lastName"), 75);
-		String password = ParamUtil.getString(r, "password1");
-		String password2 = ParamUtil.getString(r, "password2");
-		if (email.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || password.isEmpty()) {
-			SessionErrors.add(r, "registration-fields-required");
-			rp.setRenderParameter("mvcPath", "/register.jsp");
-			return;
-		}
-		if (!password.equals(password2)) {
-			SessionErrors.add(r, "passwords-do-not-match");
-			rp.setRenderParameter("mvcPath", "/register.jsp");
-			return;
-		}
-		try {
-			ServiceContext sc = com.liferay.portal.kernel.service.ServiceContextFactory.getInstance(r);
-			// Criar com autoPassword=true (senha temporaria gerada pelo Liferay)
-			com.liferay.portal.kernel.model.User newUser =
-				com.liferay.portal.kernel.service.UserLocalServiceUtil.addUser(
-					0L, td.getCompanyId(), true, null, null,
-					true, null, email, td.getLocale(),
-					firstName, null, lastName,
-					0L, 0L, true, 1, 1, 1970, null, 0,
-					new long[0], new long[0], new long[0], new long[0], false, sc
-				);
-			long userId = newUser.getUserId();
-			// Definir senha escolhida pelo usuario via API canonica do Liferay
-			// Isso garante que o hash seja feito com o algoritmo interno correto (PBKDF2)
-			// e que passwordModifiedDate seja preenchido.
-			com.liferay.portal.kernel.service.UserLocalServiceUtil.updatePassword(
-				userId, password, password, false
-			);
-			// Agora marcar termos aceitos e email verificado usando os atômicos
-			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateAgreedToTermsOfUse(userId, true);
-			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateEmailAddressVerified(userId, true);
-			_log.info(auditJson("registerUser", 0, "system",
-				"newUserId=" + userId + ", email=" + sanitize(email, 255)));
-			SessionMessages.add(r, "registrationSuccess");
-		} catch (com.liferay.portal.kernel.exception.UserEmailAddressException e) {
-			_log.warn(auditJson("registerUser", 0, "system",
-				"failed, email=" + sanitize(email, 255) + ", reason=email_already_used"));
-			SessionErrors.add(r, "email-already-used");
-		} catch (com.liferay.portal.kernel.exception.UserPasswordException e) {
-			_log.warn(auditJson("registerUser", 0, "system",
-				"failed, email=" + sanitize(email, 255) + ", reason=password_too_weak"));
-			SessionErrors.add(r, "password-too-weak");
-		} catch (Exception e) {
-			_log.error(auditJson("registerUser", 0, "system",
-				"failed, email=" + sanitize(email, 255) + ", exception=" + e.getClass().getSimpleName()));
-			SessionErrors.add(r, "registration-failed");
-		}
-		rp.setRenderParameter("mvcPath", "/register.jsp");
-	}
-
 	// -- Helpers ----------------------------------------------------------------
 
 	private String auditJson(String action, long userId, String email, String details) {
