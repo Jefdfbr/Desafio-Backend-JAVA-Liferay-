@@ -228,15 +228,20 @@ public class TodoListPortlet extends MVCPortlet {
 		}
 		try {
 			ServiceContext sc = com.liferay.portal.kernel.service.ServiceContextFactory.getInstance(r);
+			// autoPassword=true: Liferay generates a temp password internally
 			com.liferay.portal.kernel.model.User newUser =
 				com.liferay.portal.kernel.service.UserLocalServiceUtil.addUser(
-					0L, td.getCompanyId(), false, password, password,
+					0L, td.getCompanyId(), true, null, null,
 					true, null, email, td.getLocale(),
 					firstName, null, lastName,
 					0L, 0L, true, 1, 1, 1970, null, 0,
 					new long[0], new long[0], new long[0], new long[0], false, sc
 				);
-			// Ensure user can log in immediately without terms-of-use interstitial
+			// Set the user's chosen password via the canonical API (correct hashing)
+			com.liferay.portal.kernel.service.UserLocalServiceUtil.updatePassword(
+				newUser.getUserId(), password, password, false
+			);
+			// Allow immediate login (no terms-of-use interstitial)
 			newUser.setAgreedToTermsOfUse(true);
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateUser(newUser);
 			rp.setRenderParameter("registrationSuccess", "true");
