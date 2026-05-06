@@ -230,7 +230,7 @@ public class TodoListPortlet extends MVCPortlet {
 			ServiceContext sc = com.liferay.portal.kernel.service.ServiceContextFactory.getInstance(r);
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.addUser(
 				0L, td.getCompanyId(), false, password, password,
-				false, null, email, td.getLocale(),
+				true, null, email, td.getLocale(),
 				firstName, null, lastName,
 				0L, 0L, true, 1, 1, 1970, null, 0,
 				new long[0], new long[0], new long[0], new long[0], false, sc

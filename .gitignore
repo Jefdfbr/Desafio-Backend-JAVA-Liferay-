@@ -6,8 +6,9 @@ out/
 # Gradle wrapper cache (keep gradlew scripts)
 gradle/wrapper/gradle-wrapper.jar
 
-# Liferay installation (heavy, not source)
-liferay/
+# Liferay installation (heavy, not source) — track only portal-ext.properties
+liferay/*
+!liferay/portal-ext.properties
 *.tar.gz
 *.zip
 
@@ -26,6 +27,3 @@ Thumbs.db
 
 # Logs
 *.log
-
-# Secrets
-portal-ext.properties
