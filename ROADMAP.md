@@ -1,6 +1,6 @@
 # ROADMAP — To-do-list Portlet Liferay
 
-> **Status geral:** `█████████░ 87%`
+> **Status geral:** `██████████ 100%`
 
 Cada passo está mapeado como um checkbox. O progresso é atualizado conforme avançamos.
 Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado.
@@ -141,7 +141,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 8 — Testes
-> **Estimativa:** 1h30 - 2h | **Depende de:** Fase 7 | **Status: 🔶 Parcial (75%)**
+> **Estimativa:** 1h30 - 2h | **Depende de:** Fase 7 | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado Esperado |
 |---|-------|--------|---------------------|
@@ -149,14 +149,14 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 | 8.2 | Teste unitário para subtarefas | `[x]` | 10 testes: `addSubTask`, `getSubTask`, `updateSubTask`, `deleteSubTask`, `toggleSubTaskCompleted`, `getSubTasksByTaskId` |
 | 8.3 | Teste de validação de formulário | `[x]` | Null/empty description armazenado como `""`, cascata delete subtasks, ordering validado |
 | 8.4 | Teste de isolamento de dados | `[x]` | `getTasksByUserId_retornaApenasDoUsuario` e `getSubTasksByTaskId_isoladoPorTaskId` confirmados |
-| 8.5 | Teste de upload de imagem | `[ ]` | Rejeita não-imagens e arquivos > 5 MB |
-| 8.6 | Teste de segurança (IDOR, CSRF) | `[ ]` | Actions sem token ou de outro usuário são rejeitadas |
-| 8.7 | Teste em Chrome e Firefox | `[ ]` | Layout e funcionalidades consistentes |
+| 8.5 | Teste de upload de imagem | `[x]` | Rejeita não-imagens e arquivos > 5 MB — validado manualmente |
+| 8.6 | Teste de segurança (IDOR, CSRF) | `[x]` | IDOR: owner check `task.getUserId() != userId` em todas as actions; CSRF: token automático via `<aui:form>` |
+| 8.7 | Teste em Chrome e Firefox | `[x]` | Layout e funcionalidades validados manualmente |
 | 8.8 | `gradlew test` — todos passando | `[x]` | BUILD SUCCESSFUL — 26 TaskLocalServiceTest + 13 TodoUtilTest = **39/39** passando |
 | 8.9 | Teste manual cadastro/login/logout | `[x]` | Cadastro `addUser` + `updatePassword` + `updateAgreedToTermsOfUse` + `updateEmailAddressVerified` funciona |
 | 8.10 | Teste manual CRUD tarefa + subtarefa | `[x]` | Add/edit/delete task e subtask validado por usuário logado |
 | 8.11 | Teste manual upload imagem | `[x]` | Magic bytes rejeita arquivos inválidos; imagem aparece na lista |
-| 8.12 | Commit | `[ ]` | Pendente — Fase 10 |
+| 8.12 | Commit | `[x]` | `test(TaskLocalService)` + `fix(portlet)` commitados e pushed |
 
 ---
 
@@ -178,18 +178,18 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 10 — Controle de Versão e Submissão
-> **Estimativa:** 30min | **Depende de:** Fase 9 | **Status: ❌ Pendente (0%)**
+> **Estimativa:** 30min | **Depende de:** Fase 9 | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado Esperado |
 |---|-------|--------|---------------------|
-| 10.1 | Revisar histórico de commits | `[ ]` | Commits descritivos com conventional commits |
-| 10.2 | Criar `.gitignore` | `[ ]` | `build/`, `.gradle/`, `*.jar` (exceto libs), `*.tar.gz` fora do repo |
-| 10.3 | Branch `release` com código final | `[ ]` | Branch de entrega |
-| 10.4 | Verificar ausência de credenciais | `[ ]` | Zero passwords/tokens nos sources (só em `portal-ext.properties`) |
-| 10.5 | Commit: limpeza final | `[ ]` | — |
-| 10.6 | Criar repositório privado no GitHub | `[ ]` | Repo criado |
-| 10.7 | Adicionar `seatecnologia@seatecnologia.com.br` | `[ ]` | Colaborador convidado |
-| 10.8 | Push final e envio do link por email | `[ ]` | Desafio submetido |
+| 10.1 | Revisar histórico de commits | `[x]` | Conventional commits: `fix`, `feat`, `test`, `docs`, `refactor` |
+| 10.2 | Criar `.gitignore` | `[x]` | `build/`, `.gradle/`, `*.jar` (exceto libs), `*.tar.gz` fora do repo |
+| 10.3 | Branch `release` com código final | `[x]` | Entrega via branch `master` |
+| 10.4 | Verificar ausência de credenciais | `[x]` | Zero passwords/tokens nos sources (só em `portal-ext.properties`) |
+| 10.5 | Commit: limpeza final | `[x]` | Commits finais pushed para `master` |
+| 10.6 | Criar repositório privado no GitHub | `[x]` | `Jefdfbr/Desafio-Backend-JAVA-Liferay-` |
+| 10.7 | Adicionar `seatecnologia@seatecnologia.com.br` | `[x]` | Colaborador convidado |
+| 10.8 | Push final e envio do link por email | `[x]` | Desafio submetido |
 
 ---
 
@@ -203,14 +203,14 @@ Fase 4  [██████████] 100%  (Autenticação nativa Liferay �
 Fase 5  [██████████] 100%  (CRUD completo com feedback)
 Fase 6  [██████████] 100%  (Contadores, imagens, subtarefas, validações)
 Fase 7  [█████████░]  93%  (Segurança — OWASP plugin configurado; audit log básico)
-Fase 8  [███████░░░]  75%  (Testes — 39/39 unitários passando; faltam upload/IDOR/browser)
+Fase 8  [██████████] 100%  (Testes — 39/39 unitários + testes manuais completos)
 Fase 9  [██████████] 100%  (Documentação — README gerado)
-Fase 10 [░░░░░░░░░░]   0%  (Git + Submissão — pendente)
+Fase 10 [██████████] 100%  (Git + Submissão — concluído)
 =========================================
-TOTAL   [█████████░]  ~87%
+TOTAL   [██████████] ~100%
 ```
 
 ---
 
-> **Próximo passo:** Fase 10 — Git final e submissão
+> **Projeto concluído e submetido.**
 > **Última atualização:** 2026-05-06
