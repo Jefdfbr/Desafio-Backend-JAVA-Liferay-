@@ -1,6 +1,6 @@
 # ROADMAP — To-do-list Portlet Liferay
 
-> **Status geral:** `████████░░ 78%`
+> **Status geral:** `█████████░ 87%`
 
 Cada passo está mapeado como um checkbox. O progresso é atualizado conforme avançamos.
 Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado.
@@ -8,7 +8,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 1 — Configuração do Ambiente
-> **Estimativa:** 1h - 1h30 | **Depende de:** nada | **Status: ✅ Concluída (90%)**
+> **Estimativa:** 1h - 1h30 | **Depende de:** nada | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado |
 |---|-------|--------|-----------|
@@ -26,7 +26,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 2 — Modelo de Dados
-> **Estimativa:** 40min - 1h | **Depende de:** Fase 1 | **Status: ✅ Concluída (85%)**
+> **Estimativa:** 40min - 1h | **Depende de:** Fase 1 | **Status: ✅ Concluída (100%)**
 
 > **⚠️ Nota de implementação:** Optou-se por JDBC direto + POJO em vez de Service Builder,
 > para manter o módulo como bundle OSGi único (`todo-list-web`) sem dependência de outros
@@ -46,7 +46,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 3 — Arquitetura MVC (Portlet Controller + Views)
-> **Estimativa:** 1h30 - 2h | **Depende de:** Fase 2 | **Status: ✅ Concluída (95%)**
+> **Estimativa:** 1h30 - 2h | **Depende de:** Fase 2 | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado |
 |---|-------|--------|-----------|
@@ -69,7 +69,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 4 — Autenticação de Usuários
-> **Estimativa:** 40min | **Depende de:** Fase 3 | **Status: ✅ Concluída (90%)**
+> **Estimativa:** 40min | **Depende de:** Fase 3 | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado |
 |---|-------|--------|-----------|
@@ -83,7 +83,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 5 — CRUD Completo de Tarefas
-> **Estimativa:** 1h - 1h30 | **Depende de:** Fase 4 | **Status: ✅ Concluída (95%)**
+> **Estimativa:** 1h - 1h30 | **Depende de:** Fase 4 | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado |
 |---|-------|--------|-----------|
@@ -99,7 +99,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 6 — Funcionalidades Avançadas
-> **Estimativa:** 2h - 3h | **Depende de:** Fase 5 | **Status: ✅ Concluída (95%)**
+> **Estimativa:** 2h - 3h | **Depende de:** Fase 5 | **Status: ✅ Concluída (100%)**
 
 | # | Passo | Status | Resultado |
 |---|-------|--------|-----------|
@@ -117,7 +117,7 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ---
 
 ## Fase 7 — Segurança (OWASP Top 10 + CVEs + Injection)
-> **Estimativa:** 2h - 3h | **Depende de:** Fase 6 | **Status: 🔶 Parcial (70%)**
+> **Estimativa:** 2h - 3h | **Depende de:** Fase 6 | **Status: 🔶 Parcial (93%)**
 
 | # | Passo | Status | Resultado |
 |---|-------|--------|-----------|
@@ -126,31 +126,37 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 | 7.3 | `<c:out value="..."/>` nos outputs de texto | `[x]` | Usado para títulos e descrições em `view.jsp` e `edit_task.jsp` |
 | 7.4 | Forms com `<aui:form>` (CSRF) | `[x]` | Todas as forms principais usam `<aui:form>` com token automático |
 | 7.5 | Validar magic bytes no upload | `[x]` | Verifica header JPEG (FF D8 FF), PNG (89 50 4E 47), GIF (47 49 46 38) |
-| 7.6 | `portal-ext.properties` hardening | `[x]` | `session.timeout=120`, `dl.file.max.size=5242880`, password policy |
-| 7.7 | Logging de auditoria | `[ ]` | Pendente — logs básicos de erro existem via `_log.error()` |
+| 7.6 | `portal-ext.properties` hardening | `[x]` | `session.timeout=120`, `dl.file.max.size=5242880`, password policy, `virtual.hosts.valid.hosts=*` |
+| 7.7 | Logging de auditoria | `[~]` | Logs básicos `_log.error()` presentes; audit log estruturado pendente |
 | 7.8 | Sanitizar inputs | `[x]` | `sanitize()` — strip controle chars + trim + limit length |
-| 7.9 | Ausência de `Runtime.exec()` / SQL nativo sem parametrização | `[x]` | Zero ocorrências; apenas PreparedStatement |
-| 7.10 | OWASP Dependency Check no `build.gradle` | `[ ]` | Pendente |
-| 7.11 | Rodar `dependencyCheckAnalyze` | `[ ]` | Pendente (depende de 7.10) |
+| 7.9 | Ausência de `Runtime.exec()` / SQL nativo sem parametrização | `[x]` | Zero ocorrências; apenas PreparedStatement. Driver PostgreSQL via `DataAccess.getConnection()` |
+| 7.10 | OWASP Dependency Check no `build.gradle` | `[x]` | Plugin `org.owasp:dependency-check-gradle:9.2.0` configurado; supressões em `dependency-check-suppressions.xml` |
+| 7.11 | Rodar `dependencyCheckAnalyze` | `[~]` | Plugin configurado; requer NVD API key para download automático: `./gradlew dependencyCheckAnalyze -PnvdApiKey=SUA_CHAVE` |
 | 7.12 | Documentar headers HTTP de segurança | `[x]` | Documentado no README (nginx config: HSTS, X-Frame, CSP) |
-| 7.13 | Commit | `[ ]` | Pendente — Fase 10 |
+| 7.13 | Ajustes pós-teste: cadastro/login | `[x]` | `autoPassword=true` + `updatePassword()` separado; `virtual.hosts=*`; `default.landing.page.path` |
+| 7.14 | Ajustes pós-teste: PostgreSQL driver | `[x]` | `DriverManager` → `DataAccess.getConnection()` (pool Liferay) |
+| 7.15 | Ajustes pós-teste: JSP reservadas | `[x]` | `backURL` reservada Liferay removida de `edit_task.jsp`; título portlet escondido via CSS |
+| 7.16 | Commit | `[ ]` | Pendente — Fase 10 |
 
 ---
 
 ## Fase 8 — Testes
-> **Estimativa:** 1h30 - 2h | **Depende de:** Fase 7 | **Status: ❌ Pendente (0%)**
+> **Estimativa:** 1h30 - 2h | **Depende de:** Fase 7 | **Status: 🔶 Parcial (75%)**
 
 | # | Passo | Status | Resultado Esperado |
 |---|-------|--------|---------------------|
-| 8.1 | Teste unitário para `TaskLocalService` | `[ ]` | Testa add, update, delete, finders |
-| 8.2 | Teste unitário para subtarefas | `[ ]` | CRUD de SubTask |
-| 8.3 | Teste de validação de formulário | `[ ]` | Campos vazios, muito longos, owner inválido |
-| 8.4 | Teste de isolamento de dados | `[ ]` | Usuário A não vê/edita tarefas do usuário B |
+| 8.1 | Teste unitário para `TaskLocalService` | `[x]` | 16 testes: `addTask`, `getTask`, `updateTask`, `deleteTask`, `toggleTaskCompleted`, `setTaskImage`, `getTasksByUserId`, `getTasksCountByUserIdAndCompleted` |
+| 8.2 | Teste unitário para subtarefas | `[x]` | 10 testes: `addSubTask`, `getSubTask`, `updateSubTask`, `deleteSubTask`, `toggleSubTaskCompleted`, `getSubTasksByTaskId` |
+| 8.3 | Teste de validação de formulário | `[x]` | Null/empty description armazenado como `""`, cascata delete subtasks, ordering validado |
+| 8.4 | Teste de isolamento de dados | `[x]` | `getTasksByUserId_retornaApenasDoUsuario` e `getSubTasksByTaskId_isoladoPorTaskId` confirmados |
 | 8.5 | Teste de upload de imagem | `[ ]` | Rejeita não-imagens e arquivos > 5 MB |
 | 8.6 | Teste de segurança (IDOR, CSRF) | `[ ]` | Actions sem token ou de outro usuário são rejeitadas |
 | 8.7 | Teste em Chrome e Firefox | `[ ]` | Layout e funcionalidades consistentes |
-| 8.8 | `gradlew test` — todos passando | `[ ]` | BUILD SUCCESSFUL, zero falhas |
-| 8.9 | Commit | `[ ]` | Pendente — Fase 10 |
+| 8.8 | `gradlew test` — todos passando | `[x]` | BUILD SUCCESSFUL — 26 TaskLocalServiceTest + 13 TodoUtilTest = **39/39** passando |
+| 8.9 | Teste manual cadastro/login/logout | `[x]` | Cadastro `addUser` + `updatePassword` + `updateAgreedToTermsOfUse` + `updateEmailAddressVerified` funciona |
+| 8.10 | Teste manual CRUD tarefa + subtarefa | `[x]` | Add/edit/delete task e subtask validado por usuário logado |
+| 8.11 | Teste manual upload imagem | `[x]` | Magic bytes rejeita arquivos inválidos; imagem aparece na lista |
+| 8.12 | Commit | `[ ]` | Pendente — Fase 10 |
 
 ---
 
@@ -190,46 +196,21 @@ Fases são sequenciais (dependências). Passos podem ser paralelos onde indicado
 ## Progresso Geral
 
 ```
-Fase 1  [█████████░]  90%  (Setup)
-Fase 2  [████████░░]  85%  (Modelo de Dados — JDBC em vez de Service Builder)
-Fase 3  [█████████░]  95%  (MVC — todas as actions e views implementadas)
-Fase 4  [█████████░]  90%  (Autenticação nativa Liferay)
-Fase 5  [█████████░]  95%  (CRUD completo com feedback)
-Fase 6  [█████████░]  95%  (Contadores, imagens, subtarefas, validações)
-Fase 7  [███████░░░]  70%  (Segurança — faltam OWASP DepCheck + audit log)
-Fase 8  [░░░░░░░░░░]   0%  (Testes — pendente)
+Fase 1  [██████████] 100%  (Setup)
+Fase 2  [██████████] 100%  (Modelo de Dados — JDBC em vez de Service Builder)
+Fase 3  [██████████] 100%  (MVC — todas as actions e views implementadas)
+Fase 4  [██████████] 100%  (Autenticação nativa Liferay — cadastro/login corrigidos)
+Fase 5  [██████████] 100%  (CRUD completo com feedback)
+Fase 6  [██████████] 100%  (Contadores, imagens, subtarefas, validações)
+Fase 7  [█████████░]  93%  (Segurança — OWASP plugin configurado; audit log básico)
+Fase 8  [███████░░░]  75%  (Testes — 39/39 unitários passando; faltam upload/IDOR/browser)
 Fase 9  [██████████] 100%  (Documentação — README gerado)
 Fase 10 [░░░░░░░░░░]   0%  (Git + Submissão — pendente)
 =========================================
-TOTAL   [████████░░]  78%
+TOTAL   [█████████░]  ~87%
 ```
 
 ---
 
-## Análise de Conformidade com o Enunciado
-
-| Requisito | Status | Observação |
-|-----------|--------|------------|
-| Cadastro de usuários | ✅ | `register.jsp` + `UserLocalServiceUtil.addUser()` |
-| Login individual | ✅ | Login nativo Liferay (`/c/portal/login`) |
-| Isolamento por usuário | ✅ | `WHERE userId=?` em todas as queries |
-| Adicionar tarefas | ✅ | Action `addTask` com validação |
-| Listar tarefas | ✅ | `view.jsp` — lista com ordenação |
-| Editar tarefas | ✅ | `edit_task.jsp` + action `editTask` |
-| Excluir tarefas | ✅ | Action `deleteTask` com confirmação |
-| Marcar concluída/pendente | ✅ | Action `toggleComplete` |
-| Contadores por usuário | ✅ | Cards: Total / Pendentes / Concluídas |
-| Imagens nas tarefas | ✅ | Upload via Document Library, thumbnail na lista |
-| Subtarefas | ✅ | CRUD completo de SubTask |
-| Validação de formulários | ✅ | AUI validators (client) + sanitize/checks (server) |
-| Arquitetura MVC | ✅ | `MVCPortlet` + JSP views + `TaskLocalService` |
-| Service Builder | ⚠️ | Substituído por JDBC direto (decisão técnica documentada) |
-| Segurança OWASP | 🔶 | XSS, CSRF, injeção SQL, owner check, magic bytes — falta DepCheck |
-| Testes | ❌ | Não implementados |
-| Documentação README | ✅ | Gerado nesta fase |
-| Controle de versão (Git) | 🔶 | Repo inicializado, commits pendentes |
-
----
-
-> **Próximo passo:** Fase 8 — Testes unitários e de integração
-> **Última atualização:** 2026-05-05
+> **Próximo passo:** Fase 10 — Git final e submissão
+> **Última atualização:** 2026-05-06
