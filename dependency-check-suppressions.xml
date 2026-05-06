@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <!-- Suprimir falsos-positivos do Liferay Portal Kernel (não é CVE real no nosso código) -->
+    <suppress>
+        <notes><![CDATA[
+            Liferay Portal Kernel é dependência compileOnly fornecida pelo container.
+            Vulnerabilidades do Liferay core não afetam este portlet OSGi isolado.
+        ]]></notes>
+        <cpe>cpe:/a:liferay:liferay_portal</cpe>
+    </suppress>
+    
+    <!-- Suprimir falsos-positivos do Tomcat (container externo) -->
+    <suppress>
+        <notes><![CDATA[
+            Tomcat é container externo gerenciado pelo Liferay bundle.
+            Não é dependência empacotada no nosso JAR.
+        ]]></notes>
+        <cpe>cpe:/a:apache:tomcat</cpe>
+    </suppress>
+    
+    <!-- Suprimir falsos-positivos do PostgreSQL driver (fornecido pelo container) -->
+    <suppress>
+        <notes><![CDATA[
+            PostgreSQL driver está no classloader do Tomcat (não no bundle).
+            Usamos DataAccess.getConnection() — não empacotamos o driver.
+        ]]></notes>
+        <cpe>cpe:/a:postgresql:postgresql</cpe>
+    </suppress>
+    
+    <!-- Suprimir falsos-positivos do OSGi framework -->
+    <suppress>
+        <notes><![CDATA[
+            OSGi framework (Equinox/Felix) é parte do Liferay container.
+            Não é dependência direta do nosso portlet.
+        ]]></notes>
+        <cpe>cpe:/a:eclipse:equinox</cpe>
+    </suppress>
+    
+    <!-- Suprimir alertas sobre JARs internos do Liferay (compileOnly) -->
+    <suppress>
+        <notes><![CDATA[
+            JARs de /liferay/tomcat/webapps/ROOT/WEB-INF/shielded-container-lib
+            são providos pelo runtime Liferay. Não são empacotados no bundle.
+        ]]></notes>
+        <filePath regex="true">.*shielded-container-lib.*</filePath>
+    </suppress>
+</suppressions>

@@ -1,10 +1,47 @@
 buildscript {
 	repositories {
 		gradlePluginPortal()
+		mavenCentral()
 	}
 	dependencies {
 		classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0"
+		// OWASP DC 9.x usa NVD REST API 2.0 (a API 1.1 foi desativada em dez/2023)
+		classpath "org.owasp:dependency-check-gradle:9.2.0"
 	}
 }
 
 apply plugin: "java"
+
+// OWASP Dependency Check — analise de vulnerabilidades em dependencias
+apply plugin: "org.owasp.dependencycheck"
+
+dependencyCheck {
+	// Desabilitar analisadores que falham em ambientes sem Node.js
+	analyzers {
+		assemblyEnabled = false
+		nodeAudit { enabled = false }
+		nodePackage { enabled = false }
+		retirejs { enabled = false }
+	}
+	// Suprimir falsos-positivos comuns do Liferay
+	suppressionFiles = ["${projectDir}/dependency-check-suppressions.xml"]
+	// Nao falhar o build se houver vulnerabilidades (apenas reportar)
+	failBuildOnCVSS = 11.0 // 11 = nunca falha
+	// Formato de saida
+	format = "ALL"
+	// Diretorio de saida
+	outputDirectory = "${buildDir}/reports/dependency-check"
+	// NVD API key (opcional; sem key usa rate-limit 1 req/6s)
+	// Para adicionar: ./gradlew dependencyCheckAnalyze -PnvdApiKey=SUA_CHAVE
+	// Em ambientes sem acesso ao NVD, desabilitar atualização automatica
+	autoUpdate = true
+	// Nao falhar o build se a base NVD nao estiver disponivel
+	failOnError = false
+	nvd {
+		// Sem API key usa rate-limit 1 req/6s — pode demorar bastante
+		// Para agilizar: ./gradlew dependencyCheckAnalyze -PnvdApiKey=SUA_CHAVE
+		if (project.hasProperty("nvdApiKey")) {
+			apiKey = project.nvdApiKey
+		}
+	}
+}
