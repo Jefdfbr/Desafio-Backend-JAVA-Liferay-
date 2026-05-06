@@ -23,6 +23,8 @@
 
     <liferay-ui:error key="registration-failed"          message="registration-failed" />
     <liferay-ui:error key="registration-fields-required" message="registration-fields-required" />
+    <liferay-ui:error key="email-already-used"           message="email-already-used" />
+    <liferay-ui:error key="password-too-weak"            message="password-too-weak" />
 
     <div class="todo-card">
         <div class="todo-logo">&#10003;</div>

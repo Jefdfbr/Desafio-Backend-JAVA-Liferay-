@@ -236,6 +236,10 @@ public class TodoListPortlet extends MVCPortlet {
 				new long[0], new long[0], new long[0], new long[0], false, sc
 			);
 			rp.setRenderParameter("registrationSuccess", "true");
+		} catch (com.liferay.portal.kernel.exception.UserEmailAddressException e) {
+			SessionErrors.add(r, "email-already-used");
+		} catch (com.liferay.portal.kernel.exception.UserPasswordException e) {
+			SessionErrors.add(r, "password-too-weak");
 		} catch (Exception e) {
 			_log.error("Registration failed for email=" + email, e);
 			SessionErrors.add(r, "registration-failed");
