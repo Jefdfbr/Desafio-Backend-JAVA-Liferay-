@@ -25,6 +25,7 @@
     <liferay-ui:error key="registration-fields-required" message="registration-fields-required" />
     <liferay-ui:error key="email-already-used"           message="email-already-used" />
     <liferay-ui:error key="password-too-weak"            message="password-too-weak" />
+    <liferay-ui:error key="passwords-do-not-match"       message="passwords-do-not-match" />
 
     <div class="todo-card">
         <div class="todo-logo">&#10003;</div>
@@ -51,6 +52,11 @@
             <aui:input name="password1" label="Senha" required="true" type="password" maxlength="100">
                 <aui:validator name="required" />
                 <aui:validator name="minLength">6</aui:validator>
+            </aui:input>
+
+            <aui:input name="password2" label="Confirmar Senha" required="true" type="password" maxlength="100">
+                <aui:validator name="required" />
+                <aui:validator name="equalTo">'#<portlet:namespace />password1'</aui:validator>
             </aui:input>
 
             <aui:button type="submit" value="Criar Conta" cssClass="btn-todo btn-primary btn-full" />

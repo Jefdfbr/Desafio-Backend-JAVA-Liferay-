@@ -221,8 +221,14 @@ public class TodoListPortlet extends MVCPortlet {
 		String firstName = sanitize(ParamUtil.getString(r, "firstName"), 75);
 		String lastName = sanitize(ParamUtil.getString(r, "lastName"), 75);
 		String password = ParamUtil.getString(r, "password1");
+		String password2 = ParamUtil.getString(r, "password2");
 		if (email.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || password.isEmpty()) {
 			SessionErrors.add(r, "registration-fields-required");
+			rp.setRenderParameter("mvcPath", "/register.jsp");
+			return;
+		}
+		if (!password.equals(password2)) {
+			SessionErrors.add(r, "passwords-do-not-match");
 			rp.setRenderParameter("mvcPath", "/register.jsp");
 			return;
 		}
@@ -241,7 +247,9 @@ public class TodoListPortlet extends MVCPortlet {
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updatePassword(
 				newUser.getUserId(), password, password, false
 			);
-			// Allow immediate login: skip email OTP and terms-of-use interstitial
+			// Reload to get fresh mvccVersion after updatePassword() incremented it,
+			// then mark email verified and terms accepted for immediate login
+			newUser = com.liferay.portal.kernel.service.UserLocalServiceUtil.getUser(newUser.getUserId());
 			newUser.setEmailAddressVerified(true);
 			newUser.setAgreedToTermsOfUse(true);
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateUser(newUser);
