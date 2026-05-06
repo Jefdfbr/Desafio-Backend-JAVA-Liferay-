@@ -14,8 +14,7 @@ if (task == null || task.getUserId() != themeDisplay.getUserId()) {
 %>
 <div class="todo-container">
     <div class="todo-alert todo-alert-error">Tarefa não encontrada ou acesso negado.</div>
-    <portlet:renderURL var="backURL" />
-    <a href="<%= backURL %>" class="btn-todo btn-secondary">&#8592; Voltar</a>
+    <a href="/web/guest/home" class="btn-todo btn-secondary">&#8592; Voltar</a>
 </div>
 <%
     return;
@@ -34,8 +33,7 @@ if (task.getImageFileEntryId() > 0) {
 
 <div class="todo-container">
 
-    <portlet:renderURL var="backURL" />
-    <a href="<%= backURL %>" class="btn-todo btn-secondary todo-back">&#8592; Voltar para lista</a>
+    <a href="/web/guest/home" class="btn-todo btn-secondary todo-back">&#8592; Voltar para lista</a>
 
     <liferay-ui:success key="task-updated"    message="task-updated" />
     <liferay-ui:success key="subtask-updated" message="subtask-updated" />

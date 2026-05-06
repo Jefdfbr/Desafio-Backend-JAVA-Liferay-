@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="com.liferay.portal.kernel.servlet.SessionErrors" %>
 <%@ include file="/init.jsp" %>
 
 <div class="todo-container">
@@ -7,8 +8,8 @@
     <div class="todo-card todo-center">
         <div class="todo-logo">&#10003;</div>
         <h3>Você já está logado!</h3>
-        <portlet:renderURL var="backURL" />
-        <a href="<%= backURL %>" class="btn-todo btn-primary">Ir para minhas tarefas</a>
+        <portlet:renderURL var="homeURL" />
+        <a href="<%= homeURL %>" class="btn-todo btn-primary">Ir para minhas tarefas</a>
     </div>
     <% } else if ("true".equals(ParamUtil.getString(request, "registrationSuccess"))) { %>
 
@@ -21,11 +22,21 @@
 
     <% } else { %>
 
-    <liferay-ui:error key="registration-failed"          message="registration-failed" />
-    <liferay-ui:error key="registration-fields-required" message="registration-fields-required" />
-    <liferay-ui:error key="email-already-used"           message="email-already-used" />
-    <liferay-ui:error key="password-too-weak"            message="password-too-weak" />
-    <liferay-ui:error key="passwords-do-not-match"       message="passwords-do-not-match" />
+    <% if (SessionErrors.contains(renderRequest, "registration-failed")) { %>
+    <div class="todo-alert todo-alert-error">Falha no cadastro. Tente novamente ou entre em contato com o suporte.</div>
+    <% } %>
+    <% if (SessionErrors.contains(renderRequest, "registration-fields-required")) { %>
+    <div class="todo-alert todo-alert-error">Todos os campos são obrigatórios.</div>
+    <% } %>
+    <% if (SessionErrors.contains(renderRequest, "email-already-used")) { %>
+    <div class="todo-alert todo-alert-error">Este e-mail já está cadastrado. Faça login para continuar.</div>
+    <% } %>
+    <% if (SessionErrors.contains(renderRequest, "password-too-weak")) { %>
+    <div class="todo-alert todo-alert-error">A senha não atende aos requisitos mínimos de segurança (mínimo 6 caracteres).</div>
+    <% } %>
+    <% if (SessionErrors.contains(renderRequest, "passwords-do-not-match")) { %>
+    <div class="todo-alert todo-alert-error">As senhas não coincidem.</div>
+    <% } %>
 
     <div class="todo-card">
         <div class="todo-logo">&#10003;</div>

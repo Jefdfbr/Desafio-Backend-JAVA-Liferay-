@@ -19,7 +19,6 @@ import com.seatecnologia.todo.model.SubTask;
 import com.seatecnologia.todo.model.Task;
 import com.seatecnologia.todo.service.TaskLocalService;
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
 import javax.portlet.ActionRequest;
@@ -47,7 +46,7 @@ public class TodoListPortlet extends MVCPortlet {
 	private static final Log _log = LogFactoryUtil.getLog(TodoListPortlet.class);
 	private static final long MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
-	// ── Task actions ──────────────────────────────────────────────────────────
+	// -- Task actions -----------------------------------------------------------
 
 	public void addTask(ActionRequest r, ActionResponse rp) throws Exception {
 		ThemeDisplay td = (ThemeDisplay) r.getAttribute(WebKeys.THEME_DISPLAY);
@@ -96,7 +95,7 @@ public class TodoListPortlet extends MVCPortlet {
 		sendRedirect(r, rp);
 	}
 
-	// ── SubTask actions ───────────────────────────────────────────────────────
+	// -- SubTask actions --------------------------------------------------------
 
 	public void addSubTask(ActionRequest r, ActionResponse rp) throws Exception {
 		ThemeDisplay td = (ThemeDisplay) r.getAttribute(WebKeys.THEME_DISPLAY);
@@ -153,7 +152,7 @@ public class TodoListPortlet extends MVCPortlet {
 		sendRedirect(r, rp);
 	}
 
-	// ── Image upload ──────────────────────────────────────────────────────────
+	// -- Image upload -----------------------------------------------------------
 
 	public void uploadImage(ActionRequest r, ActionResponse rp) throws Exception {
 		ThemeDisplay td = (ThemeDisplay) r.getAttribute(WebKeys.THEME_DISPLAY);
@@ -212,7 +211,7 @@ public class TodoListPortlet extends MVCPortlet {
 		rp.setRenderParameter("taskId", String.valueOf(taskId));
 	}
 
-	// ── User registration ─────────────────────────────────────────────────────
+	// -- User registration ------------------------------------------------------
 
 	public void registerUser(ActionRequest r, ActionResponse rp) throws Exception {
 		ThemeDisplay td = (ThemeDisplay) r.getAttribute(WebKeys.THEME_DISPLAY);
@@ -234,7 +233,7 @@ public class TodoListPortlet extends MVCPortlet {
 		}
 		try {
 			ServiceContext sc = com.liferay.portal.kernel.service.ServiceContextFactory.getInstance(r);
-			// autoPassword=true: Liferay generates a temp password internally
+			// Criar com autoPassword=true (senha temporaria gerada pelo Liferay)
 			com.liferay.portal.kernel.model.User newUser =
 				com.liferay.portal.kernel.service.UserLocalServiceUtil.addUser(
 					0L, td.getCompanyId(), true, null, null,
@@ -243,50 +242,52 @@ public class TodoListPortlet extends MVCPortlet {
 					0L, 0L, true, 1, 1, 1970, null, 0,
 					new long[0], new long[0], new long[0], new long[0], false, sc
 				);
-			// Set the user's chosen password via the canonical API (correct hashing)
+			long userId = newUser.getUserId();
+			// Definir senha escolhida pelo usuario via API canonica do Liferay
+			// Isso garante que o hash seja feito com o algoritmo interno correto (PBKDF2)
+			// e que passwordModifiedDate seja preenchido.
 			com.liferay.portal.kernel.service.UserLocalServiceUtil.updatePassword(
-				newUser.getUserId(), password, password, false
+				userId, password, password, false
 			);
-			// Reload to get fresh mvccVersion after updatePassword() incremented it,
-			// then mark email verified and terms accepted for immediate login
-			newUser = com.liferay.portal.kernel.service.UserLocalServiceUtil.getUser(newUser.getUserId());
-			newUser.setEmailAddressVerified(true);
-			newUser.setAgreedToTermsOfUse(true);
-			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateUser(newUser);
+			// Agora marcar termos aceitos e email verificado usando os atômicos
+			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateAgreedToTermsOfUse(userId, true);
+			com.liferay.portal.kernel.service.UserLocalServiceUtil.updateEmailAddressVerified(userId, true);
+			_log.info(auditJson("registerUser", 0, "system",
+				"newUserId=" + userId + ", email=" + sanitize(email, 255)));
 			rp.setRenderParameter("registrationSuccess", "true");
 		} catch (com.liferay.portal.kernel.exception.UserEmailAddressException e) {
+			_log.warn(auditJson("registerUser", 0, "system",
+				"failed, email=" + sanitize(email, 255) + ", reason=email_already_used"));
 			SessionErrors.add(r, "email-already-used");
 		} catch (com.liferay.portal.kernel.exception.UserPasswordException e) {
+			_log.warn(auditJson("registerUser", 0, "system",
+				"failed, email=" + sanitize(email, 255) + ", reason=password_too_weak"));
 			SessionErrors.add(r, "password-too-weak");
 		} catch (Exception e) {
-			_log.error("Registration failed for email=" + email, e);
+			_log.error(auditJson("registerUser", 0, "system",
+				"failed, email=" + sanitize(email, 255) + ", exception=" + e.getClass().getSimpleName()));
 			SessionErrors.add(r, "registration-failed");
 		}
 		rp.setRenderParameter("mvcPath", "/register.jsp");
 	}
 
-	// ── Helpers ───────────────────────────────────────────────────────────────
+	// -- Helpers ----------------------------------------------------------------
+
+	private String auditJson(String action, long userId, String email, String details) {
+		return String.format(
+			"{\"ts\":\"%s\",\"action\":\"%s\",\"userId\":%d,\"email\":\"%s\",\"details\":\"%s\"}",
+			new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+			action, userId, com.seatecnologia.todo.util.TodoUtil.sanitize(email, 255),
+			com.seatecnologia.todo.util.TodoUtil.sanitize(details, 500)
+		);
+	}
 
 	private boolean isValidImageMagic(File file) {
-		byte[] magic = new byte[4];
-		try (FileInputStream fis = new FileInputStream(file)) {
-			if (fis.read(magic) < 3) return false;
-		} catch (Exception e) {
-			return false;
-		}
-		// JPEG: FF D8 FF
-		if ((magic[0] & 0xFF) == 0xFF && (magic[1] & 0xFF) == 0xD8 && (magic[2] & 0xFF) == 0xFF) return true;
-		// PNG: 89 50 4E 47
-		if ((magic[0] & 0xFF) == 0x89 && (magic[1] & 0xFF) == 0x50 && (magic[2] & 0xFF) == 0x4E && (magic[3] & 0xFF) == 0x47) return true;
-		// GIF: 47 49 46 38
-		if ((magic[0] & 0xFF) == 0x47 && (magic[1] & 0xFF) == 0x49 && (magic[2] & 0xFF) == 0x46 && (magic[3] & 0xFF) == 0x38) return true;
-		return false;
+		return com.seatecnologia.todo.util.TodoUtil.isValidImageMagic(file);
 	}
 
 	private String sanitize(String input, int maxLength) {
-		if (input == null) return "";
-		input = input.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "").trim();
-		return input.length() > maxLength ? input.substring(0, maxLength) : input;
+		return com.seatecnologia.todo.util.TodoUtil.sanitize(input, maxLength);
 	}
 
 }
